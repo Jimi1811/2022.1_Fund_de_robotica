@@ -6,26 +6,20 @@
 import os 
 os.system("clear") 
 
-# Usar simbolicos
-from sympy.matrices import Matrix
-import sympy as sp
+#####################################################
+#                   PARA OPERAR 
+#####################################################
 
 # Realizar operaciones
 import numpy as np
-
-#Generación de variables simbólicas
-cos = sp.cos
-sin = sp.sin
-t, p, bb = sp.symbols("t p bb")
-p1, p2, p3 = sp.symbols("p1 p2 p3")
 
 # Generalizar transf. homogenea T
 d_vacio=np.array([[0,0,0]]).T
 R_vacio=np.eye(3)
 
-######################################################
+# ---------------------------------------------------
 #               MATRIZ DE ROTACION R
-######################################################
+# ---------------------------------------------------
 
 # PROPIEDADES PARA LA MATRIZ DE ROTACION R
 def prop_R(R):
@@ -54,7 +48,7 @@ def R_x(theta_x):
         ])
     return Rx
 
-# ALREDEDOR DE Y
+    # ALREDEDOR DE Y
 def R_y(theta_y):
     Ry = np.array([
         [np.cos(theta_y), 0, np.sin(theta_y)],
@@ -63,7 +57,7 @@ def R_y(theta_y):
         ])
     return Ry
 
-# ALREDEDOR DE Z
+    # ALREDEDOR DE Z
 def R_z(theta_z):
     Rz = np.array([
         [np.cos(theta_z), -np.sin(theta_z), 0],
@@ -72,9 +66,10 @@ def R_z(theta_z):
         ])
     return Rz
 
-######################################################
+# ---------------------------------------------------
 #      MATRIZ DE TRANSFORMACION HOMOGENEA T
-######################################################
+# ---------------------------------------------------
+
 """
 # TRANFORMACIONES PURAS
 # 1. ROTACIONES PURAS
@@ -122,7 +117,6 @@ def prop_T(T):
     print("Inversa: \n", np.round(Inv_T,decimals=3))
     print("Inversa != Transpuesta : \n", (np.round(Tra_T,decimals=2) != np.round(Inv_T,decimals=2)))
    
-
 # Hallar T a partir de R y vector d
 def T(R,d):
     # T general
@@ -134,11 +128,19 @@ def T(R,d):
 
 
 ######################################################
-#               R y T simbolizadas
+#             PARA USAR CON VARIABLES
 ######################################################
+# Usar simbolicos
+from sympy.matrices import Matrix
+import sympy as sp
+#Generación de variables simbólicas
+cos = sp.cos
+sin = sp.sin
+t, p, bb = sp.symbols("t p bb")
+p1, p2, p3 = sp.symbols("p1 p2 p3")
 
+# R_x
 def S_R_x(ang):
-    # En rad
     Rx = sp.Matrix([
         [1, 0, 0],
         [0, cos(ang), -sin(ang)],
@@ -159,14 +161,12 @@ def S_R_z(ang):
     return Rz
 
 ######################################################
-######################################################
 #        PARAMETRIZACIONES PARA HALLAR R
 ######################################################
-######################################################
 
-######################################################
+# ---------------------------------------------------
 #                      ZYZ 
-######################################################
+# ---------------------------------------------------
 
 def ZYZ_R(phi1,phi2,phi3):
     R=np.array([
@@ -177,10 +177,12 @@ def ZYZ_R(phi1,phi2,phi3):
 
     return R
 
-######################################################
+# ---------------------------------------------------
 #                  EJE / ANGULO 
-######################################################
+# ---------------------------------------------------
+
 # De la formula de Rodrigues
+
 # - Cuando tienes R y necesitas vector y angulo 
 def eje_angulo(R):
     c = (R[0,0]+R[1,1]+R[2,2]-1.0)/2.0
@@ -189,12 +191,40 @@ def eje_angulo(R):
     u = 1.0/(2.*sin(th))*np.array([R[2,1]-R[1,2], R[0,2]-R[2,0], R[1,0]-R[0,1]])
     return u,th
 
-######################################################
+    # Para valor positivo
+def eje_angulo_pos(R):
+    c = (R[0,0]+R[1,1]+R[2,2]-1.0)/2.0
+    s = np.sqrt((R[1,0]-R[0,1])**2+(R[2,0]-R[0,2])**2+(R[2,1]-R[1,2])**2)/2.0
+    th = np.arctan2(s,c)
+    u = 1.0/(2.*sin(th))*np.array([R[2,1]-R[1,2], R[0,2]-R[2,0], R[1,0]-R[0,1]])
+    return u,th
+
+    # Para valor negativo
+def eje_angulo_neg(R):
+    c = (R[0,0]+R[1,1]+R[2,2]-1.0)/2.0
+    s = -np.sqrt((R[1,0]-R[0,1])**2+(R[2,0]-R[0,2])**2+(R[2,1]-R[1,2])**2)/2.0
+    th = np.arctan2(s,c)
+    u = 1.0/(2.*sin(th))*np.array([R[2,1]-R[1,2], R[0,2]-R[2,0], R[1,0]-R[0,1]])
+    return u,th
+
+    # Deberia ser el mismo valor pero signo opuesto por propiedad
+
+# - Cuando tienes U y theta, y necesitas matriz R
+def eje_angulo_R(u,th):
+    # Matriz antisimétrica
+    su = np.array([[    0, -u[2],  u[1]],
+                   [ u[2],     0, -u[0]],
+                   [-u[1],  u[0],    0]])
+
+    R = np.eye(3) + su*sin(th) + su.dot(su)*(1-cos(th))
+    return R
+
+# ---------------------------------------------------
 #                 CUATERNION UNITARIO
-######################################################
+# ---------------------------------------------------
 
 # Cuaternion Q=(w,ex,ey,ez) a partir de R
-def Q_vector(R):
+def Q(R):
     w = 0.5*np.sqrt(1+R[0,0]+R[1,1]+R[2,2])
     ex = 1/(4*w)*(R[2,1]-R[1,2])
     ey = 1/(4*w)*(R[0,2]-R[2,0])
@@ -202,12 +232,12 @@ def Q_vector(R):
     return np.array([w, ex, ey, ez])
 
 # Matriz de rotacion R a partir de Q
-def Q_R_verif(Q):
+def Q_R(Q):
     w = Q[0]; ex = Q[1]; ey = Q[2]; ez = Q[3]
     R = np.array([
         [2*(w**2+ex**2)-1,   2*(ex*ey-w*ez),    2*(ex*ez+w*ey)],
         [  2*(ex*ey+w*ez), 2*(w**2+ey**2)-1,    2*(ey*ez-w*ex)],
-        [  2*(ex*ez-w*ey),   2*(ey*ez+w*ex), 2*(w**2+ez**2)-1]
+        [  2*(ex*ez-w*ey),   2*(ey*ez+w*ex),    2*(w**2+ez**2)-1]
     ])
     return R
 

@@ -26,13 +26,15 @@ R_vacio=np.eye(3)
 ##############################################
 
 # Pregunta 1
-""" 
+
 R_y=R_y(np.pi/2)
 R_z=R_z(np.pi/4)
 R=R_y.dot(R_z)
 print("R: \n", np.round(R,3))
 u,th=eje_angulo(R)
-print(u,np.rad2deg(th)) """
+print(u,np.rad2deg(th))
+# Verificar que R es el mismo 
+print(eje_angulo_R(u,th))
 
 """ 
 # Pregunta 2
