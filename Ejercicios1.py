@@ -21,43 +21,39 @@ d_vacio=np.array([[0,0,0]]).T
 R_vacio=np.eye(3)
 
 ##############################################
-##############################################
-##############################################
-
-# De ppt: Representaciones espaciales II
-
-""" d=np.array([[-6,10,2]]).T
-T_rot_x=T(R_x(np.pi/2),d_vacio)
-T_tra = T(R_vacio,d)
-rpta=T_tra.dot(T_rot_x)
-print(np.round(rpta,decimals=2))
- """
-##############################################
 # De la pag: Ejercicios1
 ##############################################
 
+# Se ha cambiado la representacion
+# p_A = Punto en A
+# R_A_B = Matriz de rotacion que empieza en A y termina en B
+""" 
 # Pregunta 1
-# print(S_R_z(t)*S_R_y(p))
+print(S_R_z(t)*S_R_y(p))
+print((S_R_z(t)*S_R_y(p)).T)
+"""
 
-""" # Pregunta 2
-R_y=R_y(np.pi/2)
-R_z=R_z(np.pi/4)
-Rot=R_y.dot(R_z)
-p=np.array([[1,1,1]]).T
-print(np.round(Rot.T.dot(p),3)) """
-
-""" # Pregunta 3
-b_p=np.array([[2,4,5]]).T
-b_R_a=np.array([
+""" 
+# Pregunta 2
+R_f_i = R_y(np.pi/2).dot(R_z(np.pi/4))
+p = np.array([1,1,1]).T
+p_final = (R_f_i).T.dot(p)
+print(np.round(p_final,2))
+"""
+"""
+# Pregunta 3
+p_B=np.array([[2,4,5]]).T
+R_A_B=np.array([
     [1,0,0],
     [0,0.6,0.8],
     [0,-0.8,0.6]
 ])
-a_p=b_R_a.T.dot(b_p)
+p_A = R_A_B.T.dot(b_p)
 # a
-print(np.round(a_p,3))
+print(np.round(p_A,3))
 # b
-print(np.round(b_R_a.dot(a_p),3)) """
+print(np.round(R_A_B.dot(p_A),3))
+"""
 
 """ # Pregunta 4
 a_R_b = np.array([
@@ -85,7 +81,7 @@ prop_R(M) """
 """ # Pregunta 6
 R=R_z(-np.pi/2).dot(R_x(np.pi/2))
 print(np.round(R,2)) """
-
+""" 
 # Pregunta 7
 R_z = S_R_z(t)
 R_x = S_R_x(p)
@@ -93,9 +89,10 @@ R_y = S_R_y(bb)
 Rf = R_x * R_z * R_y
 print(Rf)
 print(np.rad2deg(np.arcsin(-0.866)))
+"""
 
-# Pregunta 8
-""" 
+"""
+# Pregunta 8 
 R_z=R_z(np.pi/6)
 R_x=R_x(np.pi/2)
 R_y=R_y(np.pi/180*50)

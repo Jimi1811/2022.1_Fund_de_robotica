@@ -66,10 +66,10 @@ R = np.array([
 ])
 Q = Q_vector(R)
 print(np.round(Q,3)) """
-
-""" # Pregunta 5
+""" 
+# Pregunta 5
 R = R_z(0).dot(R_x(np.pi/2)).dot(R_z(0))
-Q = Q_vector(R)
+Q = Q(R)
 print(np.round(Q,3))
  """
 """ 

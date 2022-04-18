@@ -1,21 +1,42 @@
 ######################################################
-#                  CONFIGURACION
+#       PROPIEDADES TRIGONOMETRICAS
+######################################################
+"""
+sen(a+b) = sen(a) cos(b) + sen(b) cos(a)
+sen(a-b) = sen(a) cos(b) - sen(b) cos(a)
+
+cos(a+b) = cos(a) cos(b) - sen(a) sen(b)
+cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
+
+"""
+
+######################################################
+#           LIBRERIAS - siempre pegar
 ######################################################
 
 # Para limpiar terminal
 import os 
 os.system("clear") 
 
-#####################################################
-#                   PARA OPERAR 
-#####################################################
-
 # Realizar operaciones
 import numpy as np
 
-# Generalizar transf. homogenea T
+    # Generalizar transf. homogenea T
 d_vacio=np.array([[0,0,0]]).T
 R_vacio=np.eye(3)
+
+# Simbolicos
+from sympy.matrices import Matrix
+import sympy as sp
+    # Generación de variables simbólicas
+cos = sp.cos
+sin = sp.sin
+t, p, bb = sp.symbols("t p bb")
+p1, p2, p3 = sp.symbols("p1 p2 p3")
+
+#####################################################
+#                   PARA OPERAR 
+#####################################################
 
 # ---------------------------------------------------
 #               MATRIZ DE ROTACION R
@@ -70,44 +91,6 @@ def R_z(theta_z):
 #      MATRIZ DE TRANSFORMACION HOMOGENEA T
 # ---------------------------------------------------
 
-"""
-# TRANFORMACIONES PURAS
-# 1. ROTACIONES PURAS
-T_rot_x = np.eye(4)
-T_rot_x[:3,:3]=Rx
-# print(T_rot_x)
-
-T_rot_y = np.eye(4)
-T_rot_y[:3,:3]=Ry
-# print(T_rot_y)
-
-T_rot_z = np.eye(4)
-T_rot_z[:3,:3]=Rz
-# print(T_rot_z)
-
-# 2. TRASLACIONES
-# d=np.array([[1,2,3]]) 
-d=d.T
-dx=d[0]
-dy=d[1]
-dz=d[2]
-
-T_tra =np.eye(4)
-T_tra[:3,-1:]=d
-# print(T_tra)
-
-T_tra_x =np.eye(4)
-T_tra_x[:1,-1:]=dx
-# print(T_tra_x)
-
-T_tra_y =np.eye(4)
-T_tra_y[1:2,-1:]=dy
-# print (T_tra_y)
-
-T_tra_z =np.eye(4)
-T_tra_z[2:3,-1:]=dz
-# print(T_tra_z)
-"""
 # Propiedades de T:
 def prop_T(T):
     # Inversa es distinto a la transpuesta
@@ -126,19 +109,40 @@ def T(R,d):
     # print(T)
     return T
 
+# TRANFORMACIONES PURAS
+# 1. ROTACIONES PURAS
+def T_rot_x(ang_x):
+    T_rot_x = T(R_x(ang_x),d_vacio)
+    return T_rot_x
+
+def T_rot_y(ang_y):
+    T_rot_y = T(R_y(ang_y),d_vacio)
+    return T_rot_y
+
+def T_rot_z(ang_z):
+    T_rot_z = T(R_z(ang_z),d_vacio)
+    return T_rot_z
+
+# 2. TRASLACIONES PURAS
+def T_tra_x(val_x):
+    T_tra_x = T(R_vacio,np.array([[val_x,0,0]]).T)
+    return T_tra_x
+
+def T_tra_y(val_y):
+    T_tra_y = T(R_vacio,np.array([[0,val_y,0]]).T)
+    return T_tra_y
+    
+def T_tra_z(val_z):
+    T_tra_z = T(R_vacio,np.array([[0,0,val_z]]).T)
+    return T_tra_z
 
 ######################################################
 #             PARA USAR CON VARIABLES
 ######################################################
-# Usar simbolicos
-from sympy.matrices import Matrix
-import sympy as sp
-#Generación de variables simbólicas
-cos = sp.cos
-sin = sp.sin
-t, p, bb = sp.symbols("t p bb")
-p1, p2, p3 = sp.symbols("p1 p2 p3")
 
+# ---------------------------------------------------
+#              Matriz de rotacion R
+# ---------------------------------------------------
 # R_x
 def S_R_x(ang):
     Rx = sp.Matrix([
@@ -161,13 +165,14 @@ def S_R_z(ang):
     return Rz
 
 ######################################################
-#        PARAMETRIZACIONES PARA HALLAR R
+#               PARAMETRIZACIONES
 ######################################################
 
 # ---------------------------------------------------
 #                      ZYZ 
 # ---------------------------------------------------
 
+# Encontrar R a partir de los angulos
 def ZYZ_R(phi1,phi2,phi3):
     R=np.array([
         [np.cos(phi1)*np.cos(phi2)*np.cos(phi3)-np.sin(phi1)*np.sin(phi3) , -np.sin(phi1)*np.cos(phi3)-np.cos(phi1)*np.cos(phi2)*np.sin(phi3) , np.cos(phi1)*np.sin(phi2)],
@@ -176,6 +181,67 @@ def ZYZ_R(phi1,phi2,phi3):
     ])
 
     return R
+    
+# ---------------------------------------------------
+#                       YXY 
+# ---------------------------------------------------
+
+# Encontrar R a partir de los angulos
+def YXY_R(phi1,phi2,phi3):
+    R= np.array([
+        [-np.sin(phi1)*np.sin(phi3)*np.cos(phi2) + np.cos(phi1)*np.cos(phi3), np.sin(phi1)*np.sin(phi2), np.sin(phi1)*np.cos(phi2)*np.cos(phi3) + np.sin(phi3)*np.cos(phi1)], 
+        [np.sin(phi2)*np.sin(phi3),                                  np.cos(phi2),                          -np.sin(phi2)*np.cos(phi3)], 
+        [-np.sin(phi1)*np.cos(phi3) - np.sin(phi3)*np.cos(phi1)*np.cos(phi2), np.sin(phi2)*np.cos(phi1), -np.sin(phi1)*np.sin(phi3) + np.cos(phi1)*np.cos(phi2)*np.cos(phi3)]
+        ])
+
+    return R
+
+# Encontrar angulos a partir de R
+def YXY_ang_pos(R):
+    # senos y cosenos
+    sp2 = np.sqrt(R[1,0]**2+R[1,2]**2)
+    cp2 = R[1,1]
+
+    sp1 = R[0,1]/sp2
+    cp1 = R[2,1]/sp2
+
+    sp3 = R[1,0]/sp2
+    cp3 = -R[1,2]/sp2
+
+    phi1 = np.arctan2(sp1,cp1)
+    phi2 = np.arctan2(sp2,cp2)
+    phi3 = np.arctan2(sp3,cp3)
+
+    # En deg
+    phi1=np.round(np.rad2deg(phi1),3)
+    phi2=np.round(np.rad2deg(phi2),3)
+    phi3=np.round(np.rad2deg(phi3),3)
+
+    return np.array([phi1, phi2, phi3])
+
+# Encontrar angulos a partir de R
+def YXY_ang_neg(R):
+    # senos y cosenos
+    sp2 = -np.sqrt(R[1,0]**2+R[1,2]**2)
+    cp2 = R[1,1]
+
+    sp1 = R[0,1]/sp2
+    cp1 = R[2,1]/sp2
+
+    sp3 = R[1,0]/sp2
+    cp3 = -R[1,2]/sp2
+
+    phi1 = np.arctan2(sp1,cp1)
+    phi2 = np.arctan2(sp2,cp2)
+    phi3 = np.arctan2(sp3,cp3)
+
+    # En deg
+    phi1=np.round(np.rad2deg(phi1),3)
+    phi2=np.round(np.rad2deg(phi2),3)
+    phi3=np.round(np.rad2deg(phi3),3)
+
+    return np.array([phi1, phi2, phi3])
+
 
 # ---------------------------------------------------
 #                  EJE / ANGULO 
@@ -183,13 +249,8 @@ def ZYZ_R(phi1,phi2,phi3):
 
 # De la formula de Rodrigues
 
+# ---------------------------------------------------
 # - Cuando tienes R y necesitas vector y angulo 
-def eje_angulo(R):
-    c = (R[0,0]+R[1,1]+R[2,2]-1.0)/2.0
-    s = np.sqrt((R[1,0]-R[0,1])**2+(R[2,0]-R[0,2])**2+(R[2,1]-R[1,2])**2)/2.0
-    th = np.arctan2(s,c)
-    u = 1.0/(2.*sin(th))*np.array([R[2,1]-R[1,2], R[0,2]-R[2,0], R[1,0]-R[0,1]])
-    return u,th
 
     # Para valor positivo
 def eje_angulo_pos(R):
@@ -209,6 +270,7 @@ def eje_angulo_neg(R):
 
     # Deberia ser el mismo valor pero signo opuesto por propiedad
 
+# ---------------------------------------------------
 # - Cuando tienes U y theta, y necesitas matriz R
 def eje_angulo_R(u,th):
     # Matriz antisimétrica
