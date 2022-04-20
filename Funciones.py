@@ -13,6 +13,7 @@ cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
 ######################################################
 #           LIBRERIAS - siempre pegar
 ######################################################
+# from Funciones import *  DESCOMENTAR
 
 # Para limpiar terminal
 import os 
@@ -110,6 +111,7 @@ def T(R,d):
     return T
 
 # TRANFORMACIONES PURAS
+# ---------------------------------------------------
 # 1. ROTACIONES PURAS
 def T_rot_x(ang_x):
     T_rot_x = T(R_x(ang_x),d_vacio)
@@ -123,6 +125,7 @@ def T_rot_z(ang_z):
     T_rot_z = T(R_z(ang_z),d_vacio)
     return T_rot_z
 
+# ---------------------------------------------------
 # 2. TRASLACIONES PURAS
 def T_tra_x(val_x):
     T_tra_x = T(R_vacio,np.array([[val_x,0,0]]).T)
@@ -137,7 +140,7 @@ def T_tra_z(val_z):
     return T_tra_z
 
 ######################################################
-#             PARA USAR CON VARIABLES
+#                  PARA SIMBOLOS
 ######################################################
 
 # ---------------------------------------------------
@@ -242,12 +245,70 @@ def YXY_ang_neg(R):
 
     return np.array([phi1, phi2, phi3])
 
+# ---------------------------------------------------
+#              ZYX - ROLL, PITCH, YAW
+# ---------------------------------------------------
+
+# Encontrar R a partir de los angulos
+# def ZYX_R(phi1,phi2,phi3):
+#     R= np.array([
+#         [-np.sin(phi1)*np.sin(phi3)*np.cos(phi2) + np.cos(phi1)*np.cos(phi3), np.sin(phi1)*np.sin(phi2), np.sin(phi1)*np.cos(phi2)*np.cos(phi3) + np.sin(phi3)*np.cos(phi1)], 
+#         [np.sin(phi2)*np.sin(phi3),                                  np.cos(phi2),                          -np.sin(phi2)*np.cos(phi3)], 
+#         [-np.sin(phi1)*np.cos(phi3) - np.sin(phi3)*np.cos(phi1)*np.cos(phi2), np.sin(phi2)*np.cos(phi1), -np.sin(phi1)*np.sin(phi3) + np.cos(phi1)*np.cos(phi2)*np.cos(phi3)]
+#         ])
+
+#     return R
+
+# Encontrar angulos a partir de R
+def ZYX_ang_pos(R):
+    # senos y cosenos
+    cp2 = np.sqrt(R[0,0]**2+R[1,0]**2)
+    sp2 = -R[2,0]
+
+    sp1 = R[1,0]/cp2
+    cp1 = R[0,0]/cp2
+
+    sp3 = R[2,1]/cp2
+    cp3 = -R[2,2]/cp2
+
+    phi1 = np.arctan2(sp1,cp1)
+    phi2 = np.arctan2(sp2,cp2)
+    phi3 = np.arctan2(sp3,cp3)
+
+    # En deg
+    phi1=np.round(np.rad2deg(phi1),3)
+    phi2=np.round(np.rad2deg(phi2),3)
+    phi3=np.round(np.rad2deg(phi3),3)
+
+    return np.array([phi1, phi2, phi3])
+
+# Encontrar angulos a partir de R
+def ZYX_ang_neg(R):
+    # senos y cosenos
+    cp2 = -np.sqrt(R[0,0]**2+R[1,0]**2)
+    sp2 = -R[2,0]
+
+    sp1 = R[1,0]/cp2
+    cp1 = R[0,0]/cp2
+
+    sp3 = R[2,1]/cp2
+    cp3 = -R[2,2]/cp2
+
+    phi1 = np.arctan2(sp1,cp1)
+    phi2 = np.arctan2(sp2,cp2)
+    phi3 = np.arctan2(sp3,cp3)
+
+    # En deg
+    phi1=np.round(np.rad2deg(phi1),3)
+    phi2=np.round(np.rad2deg(phi2),3)
+    phi3=np.round(np.rad2deg(phi3),3)
+
+    return np.array([phi1, phi2, phi3])    
+
 
 # ---------------------------------------------------
 #                  EJE / ANGULO 
 # ---------------------------------------------------
-
-# De la formula de Rodrigues
 
 # ---------------------------------------------------
 # - Cuando tienes R y necesitas vector y angulo 
@@ -277,8 +338,11 @@ def eje_angulo_R(u,th):
     su = np.array([[    0, -u[2],  u[1]],
                    [ u[2],     0, -u[0]],
                    [-u[1],  u[0],    0]])
-
+    # Formula de Rodrigues
     R = np.eye(3) + su*sin(th) + su.dot(su)*(1-cos(th))
+
+    R = np.array(R, dtype=np.float64)
+
     return R
 
 # ---------------------------------------------------
@@ -291,7 +355,7 @@ def Q(R):
     ex = 1/(4*w)*(R[2,1]-R[1,2])
     ey = 1/(4*w)*(R[0,2]-R[2,0])
     ez = 1/(4*w)*(R[1,0]-R[0,1])
-    return np.array([w, ex, ey, ez])
+    return np.array([w, ex, ey,     ez])
 
 # Matriz de rotacion R a partir de Q
 def Q_R(Q):

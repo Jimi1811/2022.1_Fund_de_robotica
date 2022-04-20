@@ -26,7 +26,7 @@ R_vacio=np.eye(3)
 ##############################################
 
 # Pregunta 1
-
+""" 
 R_y=R_y(np.pi/2)
 R_z=R_z(np.pi/4)
 R=R_y.dot(R_z)
@@ -35,14 +35,14 @@ u,th=eje_angulo(R)
 print(u,np.rad2deg(th))
 # Verificar que R es el mismo 
 print(eje_angulo_R(u,th))
-
+ """
 """ 
 # Pregunta 2
 R=ZYZ_R(np.pi/2,np.pi/6,np.pi/4)
 print(np.round(R,3))
 R1=R_z(np.pi/2).dot(R_y(np.pi/6)).dot(R_z(np.pi/4))
 print(np.round(R1,3))
-"""
+ """
 """ 
 # Pregunta 3
 b_T_a = np.array([

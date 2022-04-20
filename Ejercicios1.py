@@ -27,11 +27,11 @@ R_vacio=np.eye(3)
 # Se ha cambiado la representacion
 # p_A = Punto en A
 # R_A_B = Matriz de rotacion que empieza en A y termina en B
-""" 
+
 # Pregunta 1
 print(S_R_z(t)*S_R_y(p))
 print((S_R_z(t)*S_R_y(p)).T)
-"""
+
 
 """ 
 # Pregunta 2

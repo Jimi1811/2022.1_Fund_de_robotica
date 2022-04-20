@@ -64,15 +64,16 @@ print(np.round(T_o_f,2))
 # ----------------------------------------------------------
 # Pregunta 2
 # ----------------------------------------------------------
-""" 
+
 Q = np.array([0.939 , 0.093 , -0.224 , 0.242])
 
 # ----------------------------------------------------------
 # a) 
+# 1. Por formula, se saca R a partir de Q
 R_Q = Q_R(Q)
 # print(R_Q)
 
-# Encontrando los valores de R para YXY con simbolos
+# 2. Encontrando los valores de R para YXY con simbolos
 S_R_YXY = S_R_y(p1)*S_R_x(p2)*S_R_y(p3)
 # print(S_R_YXY)
 
@@ -102,7 +103,7 @@ R_YXY_pi= sp.Matrix([
     [0,                                   -1,                          0], 
     [-sin(p1)*cos(p3) + sin(p3)*cos(p1), 0, -sin(p1)*sin(p3) - cos(p1)*cos(p3)]
     ])
- """
+ 
 # ----------------------------------------------------------
 # Pregunta 3
 # ----------------------------------------------------------
