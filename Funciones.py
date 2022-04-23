@@ -34,6 +34,8 @@ cos = sp.cos
 sin = sp.sin
 t, p, bb = sp.symbols("t p bb")
 p1, p2, p3 = sp.symbols("p1 p2 p3")
+q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
+l1, l2, l3, l4 = sp.symbols("l1 l2 l3 l4")
 
 #####################################################
 #                   PARA OPERAR 
@@ -140,34 +142,6 @@ def T_tra_z(val_z):
     return T_tra_z
 
 ######################################################
-#                  PARA SIMBOLOS
-######################################################
-
-# ---------------------------------------------------
-#              Matriz de rotacion R
-# ---------------------------------------------------
-# R_x
-def S_R_x(ang):
-    Rx = sp.Matrix([
-        [1, 0, 0],
-        [0, cos(ang), -sin(ang)],
-        [0, sin(ang), cos(ang)]
-        ])
-    return Rx
-# R_y
-def S_R_y(ang):
-    Ry = sp.Matrix([[cos(ang), 0, sin(ang)],
-                    [0, 1, 0],
-                    [-sin(ang), 0, cos(ang)]])
-    return Ry
-# R_z
-def S_R_z(ang):
-    Rz = sp.Matrix([[cos(ang), -sin(ang), 0],
-                   [sin(ang), cos(ang), 0],
-                   [0,0,1]])
-    return Rz
-
-######################################################
 #               PARAMETRIZACIONES
 ######################################################
 
@@ -246,18 +220,75 @@ def YXY_ang_neg(R):
     return np.array([phi1, phi2, phi3])
 
 # ---------------------------------------------------
+#                           XZX
+# ---------------------------------------------------
+
+# Encontrar R a partir de los angulos
+# def XZX(phi1,phi2,phi3):
+#     R= np.array([
+# [[cos(p2),                                   -sin(p2)*cos(p3),                            sin(p2)*sin(p3)],
+#  [sin(p2)*cos(p1), -sin(p1)*sin(p3) + cos(p1)*cos(p2)*cos(p3), -sin(p1)*cos(p3) - sin(p3)*cos(p1)*cos(p2)], 
+#  [sin(p1)*sin(p2),  sin(p1)*cos(p2)*cos(p3) + sin(p3)*cos(p1), -sin(p1)*sin(p3)*cos(p2) + cos(p1)*cos(p3)]]
+#     return R
+
+# Encontrar angulos a partir de R
+def XZX_ang_pos(R):
+    # senos y cosenos
+    sp2 = np.sqrt(R[1,0]**2+R[2,0]**2)
+    cp2 = R[1,1]
+
+    sp1 = R[2,0]/sp2
+    cp1 = R[1,0]/sp2
+
+    sp3 = R[0,2]/sp2
+    cp3 = -R[0,1]/sp2
+
+    phi1 = np.arctan2(sp1,cp1)
+    phi2 = np.arctan2(sp2,cp2)
+    phi3 = np.arctan2(sp3,cp3)
+
+    # En deg
+    phi1=np.round(np.rad2deg(phi1),3)
+    phi2=np.round(np.rad2deg(phi2),3)
+    phi3=np.round(np.rad2deg(phi3),3)
+
+    return np.array([phi1, phi2, phi3])
+
+# Encontrar angulos a partir de R
+def XZX_ang_neg(R):
+    # senos y cosenos
+    sp2 = -np.sqrt(R[1,0]**2+R[2,0]**2)
+    cp2 = R[1,1]
+
+    sp1 = R[2,0]/sp2
+    cp1 = R[1,0]/sp2
+
+    sp3 = R[0,2]/sp2
+    cp3 = -R[0,1]/sp2
+
+    phi1 = np.arctan2(sp1,cp1)
+    phi2 = np.arctan2(sp2,cp2)
+    phi3 = np.arctan2(sp3,cp3)
+
+    # En deg
+    phi1=np.round(np.rad2deg(phi1),3)
+    phi2=np.round(np.rad2deg(phi2),3)
+    phi3=np.round(np.rad2deg(phi3),3)
+
+    return np.array([phi1, phi2, phi3])
+
+# ---------------------------------------------------
 #              ZYX - ROLL, PITCH, YAW
 # ---------------------------------------------------
 
 # Encontrar R a partir de los angulos
-# def ZYX_R(phi1,phi2,phi3):
-#     R= np.array([
-#         [-np.sin(phi1)*np.sin(phi3)*np.cos(phi2) + np.cos(phi1)*np.cos(phi3), np.sin(phi1)*np.sin(phi2), np.sin(phi1)*np.cos(phi2)*np.cos(phi3) + np.sin(phi3)*np.cos(phi1)], 
-#         [np.sin(phi2)*np.sin(phi3),                                  np.cos(phi2),                          -np.sin(phi2)*np.cos(phi3)], 
-#         [-np.sin(phi1)*np.cos(phi3) - np.sin(phi3)*np.cos(phi1)*np.cos(phi2), np.sin(phi2)*np.cos(phi1), -np.sin(phi1)*np.sin(phi3) + np.cos(phi1)*np.cos(phi2)*np.cos(phi3)]
-#         ])
-
-#     return R
+def ZYX_R(p1,p2,p3):
+    R= np.array([
+        [np.cos(p1)*np.cos(p2), -np.sin(p1)*np.cos(p3) + np.sin(p2)*np.sin(p3)*np.cos(p1), np.sin(p1)*np.sin(p3) + np.sin(p2)*np.cos(p1)*np.cos(p3)],
+        [np.sin(p1)*np.cos(p2),  np.sin(p1)*np.sin(p2)*np.sin(p3) + np.cos(p1)*np.cos(p3), np.sin(p1)*np.sin(p2)*np.cos(p3) - np.sin(p3)*np.cos(p1)], 
+        [-np.sin(p2),                                   np.sin(p3)*np.cos(p2),                           np.cos(p2)*np.cos(p3)]
+        ])
+    return R
 
 # Encontrar angulos a partir de R
 def ZYX_ang_pos(R):
