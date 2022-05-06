@@ -7,7 +7,6 @@ sen(a-b) = sen(a) cos(b) - sen(b) cos(a)
 
 cos(a+b) = cos(a) cos(b) - sen(a) sen(b)
 cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
-
 """
 
 
@@ -108,8 +107,10 @@ def S_T_rot_z(ang):
 
 # Transformacion general
 def S_T_DH(d, th, a, alpha):
-    cth = sp.cos(th); sth = sp.sin(th)
-    ca = sp.cos(alpha); sa = sp.sin(alpha)
+    cth = sp.cos(th) 
+    sth = sp.sin(th)
+    ca = sp.cos(alpha)
+    sa = sp.sin(alpha)
     Tdh = sp.Matrix([[cth, -ca*sth,  sa*sth, a*cth],
                      [sth,  ca*cth, -sa*cth, a*sth],
                      [0,        sa,     ca,      d],
