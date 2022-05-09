@@ -9,8 +9,8 @@ cos(a+b) = cos(a) cos(b) - sen(a) sen(b)
 cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
 """
 
-
 # from Funciones import *  DESCOMENTAR
+# from Funciones_simbolico import *  DESCOMENTAR
 
 # Para limpiar terminal
 import os 
@@ -19,7 +19,7 @@ os.system("clear")
 # Realizar operaciones
 import numpy as np
 
-    # Generalizar transf. homogenea T
+# Generalizar transf. homogenea T
 d_vacio=np.array([[0,0,0]]).T
 R_vacio=np.eye(3)
 
@@ -32,7 +32,7 @@ sin = sp.sin
 t, p, bb = sp.symbols("t p bb")
 p1, p2, p3 = sp.symbols("p1 p2 p3")
 q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
-l1, l2, l3, l4 = sp.symbols("l1 l2 l3 l4")
+l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
 
 
 ######################################################

@@ -13,7 +13,8 @@ cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
 ######################################################
 #           LIBRERIAS - siempre pegar
 ######################################################
-# from Funciones import *  DESCOMENTAR
+# from Funciones import *  
+# from Funciones_simbolico import *  
 
 # Para limpiar terminal
 import os 
@@ -22,7 +23,7 @@ os.system("clear")
 # Realizar operaciones
 import numpy as np
 
-    # Generalizar transf. homogenea T
+# Generalizar transf. homogenea T
 d_vacio=np.array([[0,0,0]]).T
 R_vacio=np.eye(3)
 
@@ -35,7 +36,7 @@ sin = sp.sin
 t, p, bb = sp.symbols("t p bb")
 p1, p2, p3 = sp.symbols("p1 p2 p3")
 q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
-l1, l2, l3, l4 = sp.symbols("l1 l2 l3 l4")
+l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
 
 #####################################################
 #                   PARA OPERAR 
@@ -140,6 +141,13 @@ def T_tra_y(val_y):
 def T_tra_z(val_z):
     T_tra_z = T(R_vacio,np.array([[0,0,val_z]]).T)
     return T_tra_z
+
+def T_tra(x, y, z):
+    T = np.array([[1,0,0,x],
+                  [0,1,0,y],
+                  [0,0,1,z],
+                  [0,0,0,1]])
+    return T
 
 ######################################################
 #               PARAMETRIZACIONES
@@ -407,3 +415,39 @@ def Q_eje_angulo(Q):
     th = 2 * np.arctan2(np.linalg.norm(e), w)    # Ángulo en radianes
     # th_deg = th/np.pi*180    # En grados
     return u,th
+
+# ---------------------------------------------------
+#                 Denavit-Hartenberg
+# ---------------------------------------------------
+
+
+def Tdh(d, theta, a, alpha):
+    c_th = np.cos(theta)
+    s_th = np.sin(theta)
+    c_ap = np.cos(alpha)
+    s_ap = np.sin(alpha)
+
+    T = np.array([[c_th, -c_ap*s_th,  s_ap*s_th, a*c_th], 
+                  [s_th,  c_ap*c_th, -s_ap*c_th, a*s_th], 
+                  [0,     s_ap,       c_ap,      d], 
+                  [0,     0,          0,         1]])
+    return T
+
+# ---------------------------------------------------
+#               Cinematica directa
+# ---------------------------------------------------
+
+# Cinemática directa del robot
+def CD_scara(q, l1, l2, l3, l4):
+    # Sistemas con respecto al anterior
+    T01 = T_tra(0,0,l1).dot(T_rot_z(np.pi+q[0]))
+    T12 = T_tra(l2,0,0).dot(T_rot_z(-np.pi/2+q[1]))
+    T23 = T_tra(l3,0,0)
+    T34 = T_tra(0,0,-l4+q[2]).dot(T_rot_z(np.pi/2+q[3]))
+    T4e = T_rot_x(np.pi)
+    # Sistemas con respecto a la base
+    T02 = T01.dot(T12)
+    T03 = T02.dot(T23)
+    T04 = T03.dot(T34)
+    T0e = T04.dot(T4e)
+    return T0e, (T01, T02, T03, T04)
