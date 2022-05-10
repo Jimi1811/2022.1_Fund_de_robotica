@@ -16,6 +16,9 @@ cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
 import os 
 os.system("clear") 
 
+# Realizar graficos
+import matplotlib.pyplot as plt
+
 # Realizar operaciones
 import numpy as np
 
