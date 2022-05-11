@@ -145,7 +145,7 @@ def S_T_dh_n(DH_tabla,n):
                     [0,     sa,       ca,      d], 
                     [0,     0,          0,         1]]) 
         Tf = sp.simplify(Tf*Ti)
-    # Tf = sp.simplify(Tf)
+    Tf = sp.simplify(Tf)
 
     return Tf
 

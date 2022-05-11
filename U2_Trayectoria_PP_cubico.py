@@ -58,9 +58,9 @@ plt.show()
  """
 
 # ------------------------------------------------------
-#              Polinomio cubico
+#              Polinomio quintico
 # ------------------------------------------------------
-""" A = np.array([[2**5, 2**4, 2**3, 2**2, 2, 1],
+A = np.array([[2**5, 2**4, 2**3, 2**2, 2, 1],
               [4**5, 4**4, 4**3, 4**2, 4, 1],
               [5*2**4, 4*2**3, 3*2**2, 2*2, 1, 0],
               [5*4**4, 4*4**3, 3*4**2, 2*4, 1, 0],
@@ -85,7 +85,7 @@ plt.figure(figsize=(10,10))
 plt.subplot(3,1,1); plt.plot(t,q); plt.grid(); plt.title('posición'); plt.ylabel("q [°]")
 plt.subplot(3,1,2); plt.plot(t,dq); plt.grid(); plt.title('velocidad'); plt.ylabel("dq [°/s]")
 plt.subplot(3,1,3); plt.plot(t,ddq); plt.grid(); plt.title('aceleración'); plt.ylabel("ddq [°/$s^2$]");
-plt.show() """
+plt.show()
 
 # ------------------------------------------------------
 #              Velocidad trapezoidal
