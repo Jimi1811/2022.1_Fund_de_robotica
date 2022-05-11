@@ -20,6 +20,9 @@ cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
 import os 
 os.system("clear") 
 
+# Hacer copias
+from copy import copy
+
 # Realizar graficos
 import matplotlib.pyplot as plt
 
@@ -40,6 +43,7 @@ t, p, bb = sp.symbols("t p bb")
 p1, p2, p3 = sp.symbols("p1 p2 p3")
 q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
 l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
+d1, d2, d3, d4, d5, d5 = sp.symbols("d1 d2 d3 d4 d5 d6")
 
 #####################################################
 #                   PARA OPERAR 
@@ -419,12 +423,16 @@ def Q_eje_angulo(Q):
     # th_deg = th/np.pi*180    # En grados
     return u,th
 
+######################################################
+#                   CINEMATICA
+######################################################
+
+
 # ---------------------------------------------------
 #                 Denavit-Hartenberg
 # ---------------------------------------------------
 
-
-def Tdh(d, theta, a, alpha):
+def T_dh(d, theta, a, alpha):
     c_th = np.cos(theta)
     s_th = np.sin(theta)
     c_ap = np.cos(alpha)
@@ -454,3 +462,8 @@ def CD_scara(q, l1, l2, l3, l4):
     T04 = T03.dot(T34)
     T0e = T04.dot(T4e)
     return T0e, (T01, T02, T03, T04)
+
+
+# ---------------------------------------------------
+#               Cinematica inversa
+# ---------------------------------------------------
