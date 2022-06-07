@@ -32,11 +32,11 @@ import sympy as sp
     # Generación de variables simbólicas
 cos = sp.cos
 sin = sp.sin
-t, p, bb = sp.symbols("t p bb")
+th, t, p, bb, dt = sp.symbols("th t p bb dt")
 p1, p2, p3 = sp.symbols("p1 p2 p3")
 q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
 l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
-
+r, p, y, dr, dp, dy = sp.symbols("r p y dr dp dy")
 
 ######################################################
 #                  PARA SIMBOLOS
@@ -119,3 +119,11 @@ def S_T_DH(d, th, a, alpha):
                      [0,        sa,     ca,      d],
                      [0,         0,      0,      1]])
     return Tdh
+    
+######################################################
+#     CINEMATICA DIFERENCIAL DE ROBOTS MANIPULADORES
+######################################################
+
+# Velocidad angular extraido de velocidad angular antisimetrica
+def sVectorFromSkew(S):
+    return sp.Matrix([S[2,1],S[0,2],S[1,0]])
