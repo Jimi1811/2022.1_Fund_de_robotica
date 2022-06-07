@@ -1,13 +1,35 @@
-import numpy as np
-from copy import copy
 
 # Para limpiar terminal
+from dataclasses import asdict
 import os 
 os.system("clear") 
 
-cos=np.cos; sin=np.sin; pi=np.pi
+# Hacer copias
+from copy import copy
 
-def dh(d, theta, a, alpha):
+# Realizar graficos
+import matplotlib.pyplot as plt
+
+# Realizar operaciones
+import numpy as np
+
+# Generalizar transf. homogenea T
+d_vacio=np.array([[0,0,0]]).T
+R_vacio=np.eye(3)
+
+# Simbolicos
+from sympy.matrices import Matrix
+import sympy as sp
+    # Generación de variables simbólicas
+cos = sp.cos
+sin = sp.sin
+t, p, bb = sp.symbols("t p bb")
+p1, p2, p3 = sp.symbols("p1 p2 p3")
+q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
+l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
+
+""" def dh(d, theta, a, alpha):
+
     c_th = cos(theta)
     s_th = sin(theta)
     c_ap = cos(alpha)
@@ -227,4 +249,95 @@ xdes = np.array([0.9, 0.2, 0.3])
 qnuevo = ik_gradient_ur5(xdes,q)
 print("Articulaciones: \n", qnuevo)
 print("Tipo del arreglo Q:", type(qnuevo))
-print("Tamaño del arreglo Q:", qnuevo.shape)
+print("Tamaño del arreglo Q:", qnuevo.shape) """
+
+""" n=3
+DH_tabla = np.array([
+    [1, 2, 4, 5],
+    [1, 2, 3, 4],
+    [2, 3, 12, 2]
+])
+
+DH=np.zeros((6,4))
+DH[:n,:]=DH_tabla[:,:]
+
+Tf = np.eye(4)
+
+for i in range(n):
+    c_th = np.cos(DH[i,1])
+    s_th = np.sin(DH[i,1])
+    c_ap = np.cos(DH[i,3])
+    s_ap = np.sin(DH[i,3])
+
+    a = DH[i,2]
+    d = DH[i,0]
+
+    Ti = np.array([[c_th, -c_ap*s_th,  s_ap*s_th, a*c_th], 
+                   [s_th,  c_ap*c_th, -s_ap*c_th, a*s_th], 
+                   [0,     s_ap,       c_ap,      d], 
+                   [0,     0,          0,         1]]) 
+    Tf = Tf.dot(Ti)
+    print(i)
+
+print(DH)
+print(Tf)
+
+A = np.array([
+    [1, 2, 3],
+    [1, 2, 3],
+    [1, 2, 3]
+]) """
+
+""" n=3
+DH_tabla = sp.Matrix([
+    [0,       q1,  l1,       0],
+    [0, sp.pi+q2, -l2, sp.pi/2],
+    [l3, sp.pi+q3,  0,       0]
+])
+
+DH=sp.zeros(6,4)
+DH[:n,:]=DH_tabla[:,:]
+
+Tf = sp.eye(4)
+
+for i in range(n):
+    cth = sp.cos(DH[i,1])
+    sth = sp.sin(DH[i,1])
+    ca = sp.cos(DH[i,3])
+    sa = sp.sin(DH[i,3])
+
+    a = DH[i,2]
+    d = DH[i,0]
+
+    Ti = np.array([[cth, -ca*sth,  sa*sth, a*cth], 
+                   [sth,  ca*cth, -sa*cth, a*sth], 
+                   [0,     sa,       ca,      d], 
+                   [0,     0,          0,         1]]) 
+    Tf = sp.simplify(Tf*Ti)
+Tf = sp.simplify(Tf)
+
+print(Tf)
+
+Matrix([[cos(q3)*cos(q1 + q2), -sin(q3)*cos(q1 + q2), -sin(q1 + q2), l1*cos(q1) + l2*cos(q1 + q2) - l3*sin(q1 + q2)], 
+        [sin(q1 + q2)*cos(q3), -sin(q3)*sin(q1 + q2),  cos(q1 + q2), l1*sin(q1) + l2*sin(q1 + q2) + l3*cos(q1 + q2)], 
+        [            -sin(q3),              -cos(q3),             0,                                              0], 
+        [                   0,                     0,             0,                                              1]]) """
+
+n=4
+DH_tabla_n = np.array([
+    [ q1,  0,   0,        0],
+    [  0, q2,   0, -np.pi/2],
+    [0.6, q3,   0,  np.pi/2],
+    [  0, q4, 0.8,       0]
+])
+q_inicial=np.array([0.4,1,1,1])
+
+q=np.zeros(6)
+q[:n]=q_inicial[:]
+
+q1 = q[0]
+q2 = q[1]
+q3 = q[2]
+q4 = q[3]
+q5 = q[4]
+q6 = q[5]

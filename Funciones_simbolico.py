@@ -16,6 +16,9 @@ cos(a-b) = cos(a) cos(b) + sen(a) sen(b)
 import os 
 os.system("clear") 
 
+# Hacer copias
+from copy import copy
+
 # Realizar graficos
 import matplotlib.pyplot as plt
 
@@ -37,6 +40,8 @@ p1, p2, p3 = sp.symbols("p1 p2 p3")
 q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
 l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
 r, p, y, dr, dp, dy = sp.symbols("r p y dr dp dy")
+d1, d2, d3, d4, d5, d5 = sp.symbols("d1 d2 d3 d4 d5 d6")
+
 
 ######################################################
 #                  PARA SIMBOLOS
@@ -109,7 +114,7 @@ def S_T_rot_z(ang):
 # ---------------------------------------------------  
 
 # Transformacion general
-def S_T_DH(d, th, a, alpha):
+def S_T_dh(d, th, a, alpha):
     cth = sp.cos(th) 
     sth = sp.sin(th)
     ca = sp.cos(alpha)
@@ -127,3 +132,44 @@ def S_T_DH(d, th, a, alpha):
 # Velocidad angular extraido de velocidad angular antisimetrica
 def sVectorFromSkew(S):
     return sp.Matrix([S[2,1],S[0,2],S[1,0]])
+
+# Transformacion general
+def S_T_dh_n(DH_tabla,n):
+    DH = sp.zeros(6,4)
+    DH[:n,:] = DH_tabla[:,:]
+
+    Tf = sp.eye(4)
+
+    for i in range(n):
+        cth = sp.cos(DH[i,1])
+        sth = sp.sin(DH[i,1])
+        ca = sp.cos(DH[i,3])
+        sa = sp.sin(DH[i,3])
+
+        a = DH[i,2]
+        d = DH[i,0]
+
+        Ti = np.array([[cth, -ca*sth,  sa*sth, a*cth], 
+                    [sth,  ca*cth, -sa*cth, a*sth], 
+                    [0,     sa,       ca,      d], 
+                    [0,     0,          0,         1]]) 
+        Tf = sp.simplify(Tf*Ti)
+    Tf = sp.simplify(Tf)
+
+    return Tf
+
+######################################################
+#     CINEMATICA INVERSA DE ROBOTS MANIPULADORES
+######################################################
+
+# ---------------------------------------------------
+#               Simbolico de T deseado
+# ---------------------------------------------------  
+nx, ny, nz, ox, oy, oz, ax, ay, az, px, py, pz= sp.symbols("nx ny nz ox oy oz ax ay az px py pz")
+
+def S_T_des():
+    Tdes = sp.Matrix([[nx, ox, ax, px],
+                      [ny, oy, ay, py],
+                      [nz, oz, az, pz],
+                      [0,   0,  0,  1]])
+    return Tdes
