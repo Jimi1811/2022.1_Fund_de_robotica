@@ -38,7 +38,7 @@ sin = sp.sin
 th, t, p, bb, dt = sp.symbols("th t p bb dt")
 p1, p2, p3 = sp.symbols("p1 p2 p3")
 q1, q2, q3, q4, q5, q6 = sp.symbols("q1 q2 q3 q4 q5 q6")
-l1, l2, l3, l4, l5, l5 = sp.symbols("l1 l2 l3 l4 l5 l6")
+l1, l2, l3, l4, l5, l6, L = sp.symbols("l1 l2 l3 l4 l5 l6 L")
 r, p, y, dr, dp, dy = sp.symbols("r p y dr dp dy")
 d1, d2, d3, d4, d5, d5 = sp.symbols("d1 d2 d3 d4 d5 d6")
 
@@ -130,7 +130,7 @@ def S_T_dh(d, th, a, alpha):
 ######################################################
 
 # Velocidad angular extraido de velocidad angular antisimetrica
-def sVectorFromSkew(S):
+def S_w_de_w_anti(S):
     return sp.Matrix([S[2,1],S[0,2],S[1,0]])
 
 # Transformacion general
