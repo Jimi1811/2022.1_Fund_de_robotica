@@ -267,7 +267,7 @@ print("Rango cuando q2=pi:", r2) """
 # ---------------------------------
 # Diapo 42 - Jacobiano analitico
 # ---------------------------------
-
+""" 
 # Cinemática directa
 X = sp.Matrix([[q3*sp.cos(q2)*sp.cos(q1)],
                [q3*sp.cos(q2)*sp.sin(q1)],
@@ -320,5 +320,37 @@ r3 = J3.rank()
 
 print("Jacobiano analítico cuando q3=0:\n",J3)
 print("Determinante:",det3)
-print("Rango:", r3)
+print("Rango:", r3) """
 
+# ---------------------------------
+# Diapo 51 Cinematica diferencial inversa
+# ---------------------------------
+
+q1, q2, q3, L1, L2, L3 = sp.symbols("q1 q2 q3 L1 L2 L3")
+
+# Cinemática directa
+x = L1*sp.cos(q1) + L2*sp.cos(q1+q2) + L3*sp.cos(q1+q2+q3)
+y = L1*sp.sin(q1) + L2*sp.sin(q1+q2) + L3*sp.sin(q1+q2+q3)
+th = q1 + q2 + q3
+
+X = sp.Matrix([x, y, th])
+q = sp.Matrix([q1, q2, q3])
+
+# Jacobiano analítico
+Ja = X.jacobian(q)
+# print(Ja)
+
+# Configuración
+qd = [sp.pi/4, -sp.pi/4, -sp.pi/4]
+
+# Reemplazando valores en el Jacobiano
+J = Ja.subs({q1: qd[0], q2: qd[1], q3: qd[2], L1:0.5, L2:1, L3:0.5})
+# print(J)
+
+# Velocidad deseada
+V = sp.Matrix([0.7, 0, 0])
+
+# Velocidad articular
+dq = J.inv()*V
+
+print("Velocidad articular deseada:\n", sp.N(dq, 6))
